@@ -553,22 +553,25 @@ function Bmmf () {
         const a = document.getElementById('ImgSelect');
         const b = document.getElementById('bgSelect')
         const c = document.getElementById('dataSelect')
-        if(a !== null){
+        const d = document.getElementById('btSelect')
+        if(d !== null){
             a.removeAttribute("src")
             a.removeAttribute("download")
             b.style.display = "none";
             c.style.display = "block";
+            d.removeAttribute("disabled",false)
         }
 
         const screenShot = (element) => {
             
-        
             b.style.display = "block";
             
             html2canvas(element).then(canvas => {
                 const image = canvas.toDataURL('png');
                 a.setAttribute('download', 'certificate.png');
-                a.setAttribute('src', image); 
+                a.setAttribute('src', image);
+                d.setAttribute("disabled",true)
+                a.style.width = "90%";
                 c.style.display = "none";              
             });
         };
@@ -977,7 +980,13 @@ data.stage === 9 && 'CAMP JAZZ BY NANAKE'}
         </Box> 
       </Modal>
 
-    <Button sx={{marginTop:"20px",marginBottom:"50px",backgroundColor:"#126577"}}startIcon={<PhotoIcon />} variant="contained" onClick={() => screenShot(certificateRef.current)}>
+    <Button id="btSelect"
+            sx={{marginTop:"20px",marginBottom:"50px",backgroundColor:"#126577"}}
+            startIcon={<PhotoIcon />}
+            variant="contained"
+            onClick={() => screenShot(certificateRef.current)}
+            disabled={false}
+            >
             แปลงให้เป็นรูปภาพ
      </Button>
 
