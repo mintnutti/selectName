@@ -563,9 +563,7 @@ function Bmmf () {
         }
 
         const screenShot = (element) => {
-            
             b.style.display = "block";
-            
             html2canvas(element).then(canvas => {
                 const image = canvas.toDataURL('png');
                 a.setAttribute('download', 'certificate.png');
