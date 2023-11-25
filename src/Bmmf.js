@@ -6,8 +6,7 @@ import Box from '@mui/material/Box';
 import CloseIcon from '@mui/icons-material/Close';
 import html2canvas from 'html2canvas';
 import { Button } from '@mui/material';
-import DownloadIcon from '@mui/icons-material/Download';
-
+import PhotoIcon from '@mui/icons-material/Photo';
 const Container = styled.div`
   width: 100%;
   max-width: 1440px;
@@ -109,7 +108,7 @@ const DateConcert= styled.div`
 width:80px;
 height:30px;
 margin-right:10px ;
-background-color:${({bg})=>bg === false ? '#cecece':'#252525'}  ;
+background-color:${({bg})=>bg === false ? '#cecece':'#126577'}  ;
 border-radius:100px ;
 position:relative ;
 cursor:pointer ;
@@ -294,9 +293,8 @@ padding-bottom:10px ;
 height:fit-content ;
 padding-right:10px;
 padding-left:10px;
-border-radius: 40px;
 position: relative;
-
+display: hidden;
 `
 const SelectDataArtist = styled.div`
 margin-bottom:10px ;
@@ -313,8 +311,8 @@ const DivImgBG =styled.img`
 position: absolute;
 z-index: -1;
 left: 0;
+top:0;
 width: -webkit-fill-available ;
-border-radius: 40px;
 height: -webkit-fill-available;
 `
 
@@ -332,8 +330,6 @@ function Bmmf () {
         return a.start.localeCompare(b.start);
     });
     
-
-    console.log('dataSelect',dataSelect.map((data)=> new Date(data.start).getHours() > 3 && data.Artist + new Date(data.start).getHours() ))
     
 
     const defaultTime =[
@@ -546,7 +542,6 @@ function Bmmf () {
             if(status === 'delete'){
                 setShowModal(false)
                 setDataSelect(dataSelect.filter((value)=> value.id !== data.id))
-                console.log('----',dataSelect.filter((value)=> value.id !== data.id))
             }else{
             dataSelect.push(data)
             setShowModal(false)
@@ -554,13 +549,27 @@ function Bmmf () {
         }
 
         const certificateRef = useRef(null);
+
+        const a = document.getElementById('ImgSelect');
+        const b = document.getElementById('bgSelect')
+        const c = document.getElementById('dataSelect')
+        if(a !== null){
+            a.removeAttribute("src")
+            a.removeAttribute("download")
+            b.style.display = "none";
+            c.style.display = "block";
+        }
+
         const screenShot = (element) => {
+            
+        
+            b.style.display = "block";
+            
             html2canvas(element).then(canvas => {
                 const image = canvas.toDataURL('png');
-                const a = document.createElement('a');
                 a.setAttribute('download', 'certificate.png');
-                a.setAttribute('href', image);
-                a.click();
+                a.setAttribute('src', image); 
+                c.style.display = "none";              
             });
         };
           
@@ -722,10 +731,14 @@ function Bmmf () {
             </TimeTableArtis>)}
     </FlexData>
     </ContainerTable>
-
-<DivSelectDataArtist ref={certificateRef}>
+    <FlexDate>
+    <TextDes style={{color:'red'}}>
+        ***เมื่อเลือกรายชื่อศิลปินเสร็จแล้วให้กดปุ่มด้านล่างและกดบันทึกรูปภาพ หากต้องการแก้ไขรายชื่อสามารถกดเลือกและลบรายชื่อศิลปินได้ตามปกติ***
+    </TextDes>
+    </FlexDate>
+<DivSelectDataArtist id="dataSelect" style={{display:'block'}} ref={certificateRef}>
 <DivImgLogo src={process.env.PUBLIC_URL + '/bmmf_13_logo.png'} />
-<DivImgBG src={process.env.PUBLIC_URL + '/bgskyopacity.png'}/>
+<DivImgBG id='bgSelect' style={{display:'none'}} src={process.env.PUBLIC_URL + '/bgskyopacity.png'}/>
 <SelectDataArtist>
    <DivTextDate>รายชื่อศิลปินที่เลือก วันที่ {selectDate === 1 ? '9':'10'}</DivTextDate>
 </SelectDataArtist>
@@ -870,6 +883,9 @@ data.stage === 9 && 'CAMP JAZZ BY NANAKE'}
     </>
     }
 </DivSelectDataArtist>
+<DivSelectDataArtist>
+    <img id='ImgSelect'/>
+</DivSelectDataArtist>
 
 <Modal
         open={showModal}
@@ -961,8 +977,8 @@ data.stage === 9 && 'CAMP JAZZ BY NANAKE'}
         </Box> 
       </Modal>
 
-    <Button sx={{marginTop:"20px",marginBottom:"50px"}}startIcon={<DownloadIcon />} variant="contained" onClick={() => screenShot(certificateRef.current)}>
-            ดาวน์โหลด
+    <Button sx={{marginTop:"20px",marginBottom:"50px",backgroundColor:"#126577"}}startIcon={<PhotoIcon />} variant="contained" onClick={() => screenShot(certificateRef.current)}>
+            แปลงให้เป็นรูปภาพ
      </Button>
 
                   
